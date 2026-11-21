@@ -347,6 +347,12 @@ disable_rc '*gatekeeper-service.remote*' '宿主侧 gatekeeper 连接失败 ×41
 disable_rc '*oemlock-service.remote*'    '宿主侧 oemlock 连接失败 ×454'
 disable_rc '*keymint-service.rust*'  '需 /dev/hvc11 宿主通道（内核无 VIRTIO_CONSOLE 亦无对应模块）'
 
+# StarARM: inventory of security HAL alternatives (diagnostic only).
+log "KEYMINT_DIAGNOSTICS_BEGIN"
+find "$STAGING" -iname '*keymint*' -o -iname '*keymaster*' -o -iname '*gatekeeper*' -o -iname '*keystore*' | sort || true
+find "$STAGING" -type f \( -name '*.rc' -o -name '*.xml' \) -print0 | xargs -0 -r grep -inE 'keymint|keymaster|gatekeeper' || true
+log "KEYMINT_DIAGNOSTICS_END"
+
 # 诊断：EGL/Vulkan/gralloc/mapper/allocator 文件全分区清单（run fd3746a head-60 截断于
 # system/lib —— 本轮扩到 300 并补 vulkan ICD json/libvk*；运行时真相以 init.stararm.rc
 # 串口探针为准）
